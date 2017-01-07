@@ -10,7 +10,7 @@ class Location:
         Initial class creation. .
         '''
         self.name = location_data['name']
-        self.type = location_data['type'] #Standard/private/quest/event/etc
+        self.type = location_data['type'] #Production/Convertion/Modification/etc
         self.full_fill = True if location_data['full_fill'] == 1 else False
         self.infinite_slots = True if location_data['infinite_slots'] == 1 else False
         self.slots = [None for i in range(location_data['slots'])]
@@ -102,3 +102,51 @@ class Farm(Location):
         self.days = 0
 
         return None
+
+class LocationDC:
+    '''
+    Generic location class that used as general location and used as parent
+    for all other location classes.
+    '''
+    def __init__(self, location_data):
+        '''
+        (list) -> None
+
+        Initial class creation.
+        '''
+        self.name = location_data['name']
+        self.type = location_data['type'] #Production/Convertion/Modification/etc
+        self.slots = location_data['slots']
+        self.produce = None
+        self.consume = []
+        self.days = None
+
+    def allocation(self,man):
+        '''
+        (Man) -> Bool
+
+        Assigns a man to self as target location.
+        '''
+        if man.is_allocated:
+            return False
+        for i in range(len(self.slots)):
+            if self.slots[i] is None:
+                self.slots[i] = man
+                return True
+        return False
+
+    def harvest(self):
+        return None
+
+    def night(self):
+        return None
+
+    def status(self):
+        status = self.__dict__.copy()
+        status['slots'] = []
+        for man in self.slots:
+            if man:
+                status['slots'].append(man.map_status())
+            else:
+                status['slots'].append(None)
+        return status

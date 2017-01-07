@@ -3,7 +3,7 @@ import os, subprocess,time,logging,requests,json
 
 url = "http://127.0.0.1:4000/jsonrpc"
 headers = {'content-type': 'application/json'}
-python_path = 'C:\\Users\\scorcher\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe'
+python_path = 'C:\\Users\\scorcher\\AppData\\Local\\Programs\\Python\\Python36-32\\python.exe'
 
 class Elder:
     '''
