@@ -65,6 +65,17 @@ class Database:
         return {'type': row[0], 'slots':row[1], 'full_fill':row[2],
                 'infinite_slots':row[3]}
 
+    def locationDS(self, name):
+        '''
+
+        '''
+        query = 'SELECT type,cost,consumption,production,storage,replace ' \
+                'FROM locationsDS WHERE name is "' + name +'"'
+        self.db_cursor.execute(query)
+        row = self.db_cursor.fetchone()
+        return {'name': name, 'type': row[0], 'cost':row[1], 'consumption':row[2],
+                'production':row[3], 'storage':row[4], 'replace':row[5]}
+
     def item(self, item_id=None, name=None):
         '''
         (int,str) -> dict

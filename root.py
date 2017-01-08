@@ -40,7 +40,8 @@ class Core:
         Creates session upon passed wizard parameters.
         '''
         logging.info('Creating new Session [' + str(wiz.id) + ']')
-        new_session = session.Session(wiz, self.db)
+        new_session = session.SessionDS(wiz, self.db)
+        print('session:'+ str(type(new_session)))
         self.sessions.append(new_session)
         self.wizards.remove(wiz)
         logging.debug('Session [' + str(new_session.id) + '] is created. '

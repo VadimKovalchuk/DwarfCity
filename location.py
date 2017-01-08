@@ -116,10 +116,12 @@ class LocationDC:
         '''
         self.name = location_data['name']
         self.type = location_data['type'] #Production/Convertion/Modification/etc
-        self.slots = location_data['slots']
-        self.produce = None
-        self.consume = []
-        self.days = None
+        self.cost = location_data['cost'] #List of required items
+        self.consumption = location_data['consumption'] #List of items required for action
+        self.production = location_data['production'] # List of items that are going to be produced
+        self.storage = location_data['storage'] #Dictionary where key is item and value is extra amout of items for store
+        self.replace = location_data['replace'] #List of location that current location can replace
+        self.slots = []
 
     def allocation(self,man):
         '''
@@ -142,7 +144,10 @@ class LocationDC:
         return None
 
     def status(self):
-        status = self.__dict__.copy()
+        status = {}
+        status['name'] = self.name
+        if not self.slots:
+            return status
         status['slots'] = []
         for man in self.slots:
             if man:
@@ -150,3 +155,22 @@ class LocationDC:
             else:
                 status['slots'].append(None)
         return status
+
+class Slot:
+    '''
+    Slots alow to allocate man on specific location.
+    '''
+    def __init__(self, cost):
+        '''
+        (list) -> None
+
+        Initial class creation. Cost defines list of Items required for man allocation on this slot
+        '''
+        self.man = None
+        self.cost = [None]
+
+    def status(self):
+        '''
+
+        '''
+        return self.__dict__.copy()
