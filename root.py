@@ -40,7 +40,7 @@ class Core:
         Creates session upon passed wizard parameters.
         '''
         logging.info('Creating new Session [' + str(wiz.id) + ']')
-        new_session = session.SessionDS(wiz, self.db)
+        new_session = session.SessionDC(wiz, self.db)
         print('session:'+ str(type(new_session)))
         self.sessions.append(new_session)
         self.wizards.remove(wiz)
@@ -55,7 +55,7 @@ class Core:
         Creates player in core list with passed id. Creates Wizard for
         this player and returns this wizard instance.
         '''
-        new_player = players.Player(id)
+        new_player = players.PlayerDC(id)
         self.players.append(new_player)
         new_wiz = wizard.Wizard(new_player)
         self.wizards.append(new_wiz)

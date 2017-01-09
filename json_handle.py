@@ -44,7 +44,16 @@ class Gate:
                 'session_id':current_session.id
                 }
 
-    def status(self):
+    def session_status(self):
+        player_id = int(self.request["id"])
+        current_inst = self.core.get_instance_by_player(player_id)
+        #print('inst.status:',current_inst.status())
+        if current_inst:
+            return current_inst.status()
+        else:
+            return False
+
+    def action_map(self):
         player_id = int(self.request["id"])
         current_inst = self.core.get_instance_by_player(player_id)
         #print('inst.status:',current_inst.status())
@@ -63,10 +72,31 @@ class Gate:
                                                   "instance expected")
             return False
 
-    def player_data(self,player_id):
+    def player_status(self,player_id):
         for player in self.core.players:
             if player.id == int(player_id):
-                return player.data()
+                return player.general_status()
+        else:
+            return False
+
+    def player_map(self,player_id):
+        for player in self.core.players:
+            if player.id == int(player_id):
+                return player.map_status()
+        else:
+            return False
+
+    def player_population(self,player_id):
+        for player in self.core.players:
+            if player.id == int(player_id):
+                return player.population_status()
+        else:
+            return False
+
+    def player_inventory(self,player_id):
+        for player in self.core.players:
+            if player.id == int(player_id):
+                return player.inventory_status()
         else:
             return False
 
@@ -85,9 +115,13 @@ class Gate:
         # Dispatcher is dictionary {<method_name>: callable}
         dispatcher["update"] = self.update
         dispatcher["connect"] = self.player_connect
-        dispatcher["status"] = self.status
+        dispatcher["status"] = self.session_status
+        dispatcher["action_map"] = self.action_map
         dispatcher["wizard_conditions"] = self.wizard_conditions
-        dispatcher["player_data"] = self.player_data
+        dispatcher["player_data"] = self.player_status
+        dispatcher["player_map"] = self.player_map
+        dispatcher["player_population"] = self.player_population
+        dispatcher["player_inventory"] = self.player_inventory
         dispatcher["allocation"] = self.allocation_command
 
 

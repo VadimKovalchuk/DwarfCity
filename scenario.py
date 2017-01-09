@@ -6,7 +6,7 @@ start_pop_amount = 2
 names = ["Rubrour", "Buba", "Kildruk", "Lokkomri", "Lughoick", "Thastreath", "Hofoud", "Janmen",
                  "Oldrug", "Heddeat", "Dourdrami", "Yurharlig", "Dolonlir", "Rumruc", "Jalik"]
 
-class ScenarioDS:
+class ScenarioDC:
 
     def __init__(self, name, session, db):
         '''
@@ -31,13 +31,13 @@ class ScenarioDS:
         '''
         player.map = map.Map(player.id)
 
-        for x in range(player.map.locations):
-            for y in range(player.map.locations[0]):
+        for x in range(len(player.map.locations)):
+            for y in range(len(player.map.locations[0])):
                 if x < 3:
                     location_data = self.db.locationDS("forest")
                 else:
                     location_data = self.db.locationDS("rock")
-                location_class = location.LocationDS(location_data)
+                location_class = location.LocationDC(location_data)
                 player.map.switch_location(location_class, x,y)
         return None
 

@@ -6,9 +6,14 @@ url = "http://127.0.0.1:4000/jsonrpc"
 headers = {'content-type': 'application/json'}
 command_args = {'login':['login', 'password'],
                 'status':[],
+                'action_map':[],
                 'merge_wizard':['destination'],
                 'player_data':['player_id'],
-                'allocation':[]}
+                'player_data': ['player_id'],
+                'player_map': ['player_id'],
+                'player_population': ['player_id'],
+                'player_inventory': ['player_id'],
+                'allocation': []}
 
 
 def get_command_arguments(name):

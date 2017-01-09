@@ -34,7 +34,7 @@ command_flows = {'connect': login_flow,
 
 def main():
 
-    player = players.Player(login_flow())
+    player = players.PlayerDC(login_flow())
 
     print('AI '+ str(player.id) + '(' + sys.argv[1] + '/'+ sys.argv[2] +') is created. merging it to wizard '+ sys.argv[3])
     update_wizard(player.id)

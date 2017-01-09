@@ -71,7 +71,7 @@ class Player:
                 'infra': [location.status() for location in self.infra]
                 }
 
-class PlayerDS:
+class PlayerDC:
 
     def __init__(self, id):
         '''
@@ -138,6 +138,25 @@ class PlayerDS:
                 stock_dict[item.type][item.name] += 1
 
         return {'population': [man.status() for man in self.population],
-                'stock': stock_dict,
-                'map': self.map.status()
-                }
+                'stock': stock_dict}
+
+    def general_status(self):
+        res = self.data()
+        return res
+
+    def map_status(self):
+        return self.map.status()
+
+    def population_status(self):
+        return [man.status() for man in self.population]
+
+    def inventory_status(self):
+        stock_dict = {}
+        for item in self.stock:
+            if item.type not in stock_dict:
+                stock_dict[item.type] = {}
+            if item.name not in stock_dict[item.type]:
+                stock_dict[item.type][item.name] = 1
+            else:
+                stock_dict[item.type][item.name] += 1
+        return stock_dict

@@ -180,7 +180,7 @@ class Session:
         return status
 
 
-class SessionDS:
+class SessionDC:
 
     def __init__(self, wzrd, db):
         '''
@@ -203,7 +203,7 @@ class SessionDS:
         self.turn_order = self.players[:]
         self.player_turn = self.turn_order[0]
         self.turn_start_time = time.time()
-        self.scenario = scenario.ScenarioDS(wzrd.conditions['scenario'], self, self.db)
+        self.scenario = scenario.ScenarioDC(wzrd.conditions['scenario'], self, self.db)
 
         for player in self.players:
             player.set_session(self)
@@ -344,8 +344,7 @@ class SessionDS:
         '''
         status = {'type': 'session',
                   'phase': self.phase,
-                  'player_turn': self.player_turn.id,
-                  'map':[]}
+                  'player_turn': self.player_turn.id}
         '''
         for location in self.map:
             status['map'].append(location.status())'''
