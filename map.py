@@ -30,8 +30,8 @@ class Map:
         '''
         Returns status for all locations on map
         '''
-        result = [['' for i in range(self.locations[0])] for i in range(self.locations)]
-        for x in range(self.locations):
-            for y in range(self.locations[x]):
-                result[x][y] = self.locations[x][y]
+        result = [['' for i in range(len(self.locations[0]))] for i in range(len(self.locations))]
+        for x in range(len(self.locations)):
+            for y in range(len(self.locations[x])):
+                result[x][y] = self.locations[x][y].status()
         return result

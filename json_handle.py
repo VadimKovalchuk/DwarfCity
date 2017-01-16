@@ -58,7 +58,7 @@ class Gate:
         current_inst = self.core.get_instance_by_player(player_id)
         #print('inst.status:',current_inst.status())
         if current_inst:
-            return current_inst.status()
+            return current_inst.map_status()
         else:
             return False
 

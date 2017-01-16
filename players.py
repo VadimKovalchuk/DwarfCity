@@ -137,8 +137,8 @@ class PlayerDC:
             else:
                 stock_dict[item.type][item.name] += 1
 
-        return {'population': [man.status() for man in self.population],
-                'stock': stock_dict}
+        return {'population': len(self.population),
+                'session': self.session.id}
 
     def general_status(self):
         res = self.data()
