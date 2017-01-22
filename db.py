@@ -1,4 +1,4 @@
-import logging, sqlite3
+import logging, sqlite3,location
 
 ai_creation_timeout = 1
 
@@ -27,6 +27,23 @@ class Database:
         logging.debug('Database connections are established')
         return None
 
+    def _build_dict(self, raw_dict):
+        '''
+        (str) -> dict
+
+        Converts string to dictionary.
+        Returns parced dictionary
+        '''
+        raw_dict = ''
+        if not (raw_dict.find(',') and raw_dict.find(':')):
+            return False
+        result = {}
+        pairs = raw_dict.split(',')
+        for pair in pairs:
+            key,value = pair.split(':')
+            result[key] = value
+        return result
+
     def player_login(self, login, password):
         '''
         (None) -> bool
@@ -54,27 +71,47 @@ class Database:
 
         return False
 
-    def location(self, name):
-        '''
-
-        '''
-        query = 'SELECT type,slots,full_fill,infinite_slots ' \
-                'FROM locations WHERE name is "' + name +'"'
-        self.db_cursor.execute(query)
-        row = self.db_cursor.fetchone()
-        return {'type': row[0], 'slots':row[1], 'full_fill':row[2],
-                'infinite_slots':row[3]}
-
     def locationDS(self, name):
         '''
 
         '''
-        query = 'SELECT type,cost,consumption,production,storage,replace ' \
+        query = 'SELECT type,cost,storage,replace ' \
                 'FROM locationsDS WHERE name is "' + name +'"'
         self.db_cursor.execute(query)
         row = self.db_cursor.fetchone()
-        return {'name': name, 'type': row[0], 'cost':row[1], 'consumption':row[2],
-                'production':row[3], 'storage':row[4], 'replace':row[5]}
+        if not row:
+            logging.error('Location ['+name+'] is missing in DB')
+            return False
+        storage = self._build_dict(row[2])
+        result_location =  location.LocationDC(name=name,
+                                               loc_type=row[0],
+                                               cost=row[1].split(),
+                                               storage=storage,
+                                               replace=row[3].split())
+        result_location.recipes = self._recipes(name)
+
+        return result_location
+
+    def _recipes(self, name):
+        '''
+        (str) -> list of Recipe
+
+        Returns list of recipes for inputed location name
+        '''
+        query = 'SELECT required,produced,stage,automatic ' \
+                'FROM recipes WHERE name is "' + name + '"'
+        self.db_cursor.execute(query)
+        rows = self.db_cursor.fetchall()
+        if not rows:
+            return []
+        recipes = []
+        for row in rows:
+            required = row[0].split()
+            produced = row[1].split()
+            automatic = True if row[3] == 'True' else False
+            current_recipe = location.Recipe(required=required,produced=produced,stage=row[2],automatic=automatic)
+            recipes.append(current_recipe)
+        return recipes
 
     def item(self, item_id=None, name=None):
         '''
