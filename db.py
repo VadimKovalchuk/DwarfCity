@@ -34,9 +34,8 @@ class Database:
         Converts string to dictionary.
         Returns parced dictionary
         '''
-        raw_dict = ''
         if not (raw_dict.find(',') and raw_dict.find(':')):
-            return False
+            assert True, "Wrong string is passed to dictionary builder during DB interaction"
         result = {}
         pairs = raw_dict.split(',')
         for pair in pairs:
@@ -82,12 +81,25 @@ class Database:
         if not row:
             logging.error('Location ['+name+'] is missing in DB')
             return False
-        storage = self._build_dict(row[2])
-        result_location =  location.LocationDC(name=name,
-                                               loc_type=row[0],
-                                               cost=row[1].split(),
-                                               storage=storage,
-                                               replace=row[3].split())
+        # Build Storage dictionary
+        if row[2]:
+            if row[2].find(',') and row[2].find(':'):
+                storage = self._build_dict(row[2])
+            else:
+                storage = {}
+        else:
+            storage = {}
+        # Build Cost list
+        if row[1]:
+            cost = row[1].split()
+        else:
+            cost = []
+        # Build Replace list
+        if row[3]:
+            replace = row[3].split()
+        else:
+            replace = []
+        result_location = location.LocationDC(name=name, loc_type=row[0], cost=cost, storage=storage, replace=replace)
         result_location.recipes = self._recipes(name)
 
         return result_location
@@ -99,7 +111,7 @@ class Database:
         Returns list of recipes for inputed location name
         '''
         query = 'SELECT required,produced,stage,automatic ' \
-                'FROM recipes WHERE name is "' + name + '"'
+                'FROM recipes WHERE location is "' + name + '"'
         self.db_cursor.execute(query)
         rows = self.db_cursor.fetchall()
         if not rows:

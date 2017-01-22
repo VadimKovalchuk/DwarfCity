@@ -34,24 +34,21 @@ class ScenarioDC:
         for x in range(len(player.map.locations)):
             for y in range(len(player.map.locations[0])):
                 if x < 3:
-                    location_data = self.db.locationDS("forest")
+                    location_class = self.db.locationDS("forest")
                 else:
-                    location_data = self.db.locationDS("rock")
-                location_class = location.LocationDC(location_data)
+                    location_class = self.db.locationDS("rock")
                 player.map.switch_location(location_class, x,y)
 
-        location_data = self.db.locationDS("root cavern")
-        location_class = location.LocationDC(location_data)
+        location_class = self.db.locationDS("root cavern")
         player.map.switch_location(location_class, 3, 0)
 
-        location_data = self.db.locationDS("cavern")
-        location_class = location.LocationDC(location_data)
+        location_class = self.db.locationDS("cavern")
         player.map.switch_location(location_class, 3, 1)
         return None
 
     def _create_map(self):
         '''
-        Creates clan and players maps
+        Creates action and players maps
         '''
         for player in self.session.players:
             self._create_player_map(player)
