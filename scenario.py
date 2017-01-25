@@ -46,13 +46,31 @@ class ScenarioDC:
         player.map.switch_location(location_class, 3, 1)
         return None
 
+    def _create_action_map(self):
+        '''
+        (None) -> None
+
+        Creates action map according to Scenario rules.
+        '''
+        distribution = [["excavation","tunnel", "ore mining",   "ruby mining", "tunnel",   "ore stockpile"],
+                        ["furnishing","tunnel","mine construction","tunnel",    "tunnel",   "blacksmith"],
+                        ["tunnel",  "tunnel",   "tunnel",       "tunnel",   "pasture building","tunnel"],
+                        ["logging", "barn",     "farming",      "tunnel",   "sheep farming","donkey farming"]]
+        self.session.map = map.Map(self.session.id)
+        s_map = self.session.map
+        for x in range(len(s_map.locations)):
+            for y in range(len(s_map.locations[0])):
+                location_class = self.db.locationDS(distribution[y][x])
+                s_map.switch_location(location_class, x,y)
+        return None
+
     def _create_map(self):
         '''
         Creates action and players maps
         '''
         for player in self.session.players:
             self._create_player_map(player)
-        self._create_player_map(self.session)
+        self._create_action_map()
         return None
 
 

@@ -75,7 +75,7 @@ class Database:
 
         '''
         query = 'SELECT type,cost,storage,replace ' \
-                'FROM locationsDS WHERE name is "' + name +'"'
+                'FROM locations WHERE name is "' + name +'"'
         self.db_cursor.execute(query)
         row = self.db_cursor.fetchone()
         if not row:
