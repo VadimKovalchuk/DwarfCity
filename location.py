@@ -50,11 +50,14 @@ class LocationDC:
                 status['slots'].append(None)
         return status
 
+    def __str__(self):
+        return self.name
+
 class Slot:
     '''
     Slots alow to allocate man on specific location.
     '''
-    def __init__(self, cost):
+    def __init__(self, cost = []):
         '''
         (list) -> None
 
@@ -62,6 +65,21 @@ class Slot:
         '''
         self.man = None
         self.cost = [None]
+
+    def assign(self, man):
+        '''
+        (Man) -> bool
+
+        Assigns man to current slot.
+        '''
+
+        return True
+
+    def apply(self):
+        '''
+        Performs action according to location rules.
+        '''
+        return True
 
     def status(self):
         '''
@@ -84,6 +102,14 @@ class Recipe:
         self.stage = stage
         self.automatic = automatic
         return None
+
+    def apply(self, location=None):
+        '''
+        (Location) -> bool
+
+        Applies recipe
+        '''
+        return True
 
     def status(self):
         '''
