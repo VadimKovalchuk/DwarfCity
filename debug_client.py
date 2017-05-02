@@ -48,46 +48,26 @@ def login_flow():
 
     return None
 
-def allocation(player):
+def allocation(men_list,id):
 
-    def free_slots(slots_lst):
-        count = 0
-        for i in range(len(slots_lst)):
-            if slots_lst[i] is None:
-                count += 1
-        return count
+    #responce = client.send_request('status',[],player.id)
+    print('location X: ',end='')
+    location_x = int(input())
+    print('location Y: ',end='')
+    location_y = int(input())
+    print('private = 1, public=0: ',end='')
+    private = int(input())
+    for i in range(len(men_list)):
+        if men_list[i]["is_allocated"]:
+            continue
+        print(i,' - ' ,men_list[i]["name"],men_list[i]["points"])
+    print('name number to add: ',end='')
+    inp = input()
+    man = men_list[int(inp)]
+    #man.is_allocated = True
 
-    men = []
-    responce = client.send_request('status',[],player.id)
-    map_lst = responce['result']['map']
-    map_lst.extend(player.infra)
-    for i in range(len(map_lst)):
-        free = free_slots(map_lst[i]['slots'])
-        if free:
-            print(i, ' - ', map_lst[i]['name'], ': ', free)
-
-    print('location: ',end='')
-    location_index = int(input())
-    location_name = map_lst[location_index]['name']
-    man_limit = free_slots(map_lst[location_index]['slots'])
-
-    for a in range(man_limit):
-        for i in range(len(player.population)):
-            if player.population[i].is_allocated:
-                continue
-            print(i,' - ' ,player.population[i].name,player.population[i].points)
-        print('Selected',men)
-        print('name number to add: ',end='')
-        inp = input()
-        if inp == '':
-            break
-        else:
-            man = player.population[int(inp)]
-            men.append(man.name)
-            man.is_allocated = True
-
-    args = {'location': location_name, 'men': men}
-    return client.send_request('allocation',args,player.id)
+    args = {'x': location_x, 'y': location_y, 'private': private, 'man': man["name"]}
+    return client.send_request('allocation',args,id)
 
 def main():
 
@@ -114,11 +94,10 @@ def main():
             client.merge_wizard(player.id,args['destination'])
         elif cmd == 'allocation':
             args = {'player_id':player.id}
-            responce = client.send_request('player_data',args,player.id)
-            player_data = responce['result']
-            client.deserialize_player_data(player,player_data)
-            #print(player.data())
-            client.print_responce(allocation(player))
+            responce = client.send_request('player_population',args,player.id)
+            men_list = responce['result']
+            print(men_list)
+            client.print_responce(allocation(men_list, player.id))
         else:
             client.print_responce(client.send_request(cmd,args,player.id))
 

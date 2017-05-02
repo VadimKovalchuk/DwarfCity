@@ -55,7 +55,7 @@ class Core:
         Creates player in core list with passed id. Creates Wizard for
         this player and returns this wizard instance.
         '''
-        new_player = players.PlayerDC(id)
+        new_player = players.Player(id)
         self.players.append(new_player)
         new_wiz = wizard.Wizard(new_player)
         self.wizards.append(new_wiz)

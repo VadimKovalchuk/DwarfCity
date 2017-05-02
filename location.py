@@ -14,8 +14,9 @@ class LocationDC:
         self.cost = cost #List of required items
         self.storage = storage #Dictionary where key is item and value is extra amout of items for store
         self.replace = replace #List of location that current location can replace
-        self.recipes = []
-        self.slots = []
+        self.slots = [Slot()]
+
+        return None
 
     def allocation(self,man):
         '''
@@ -26,12 +27,15 @@ class LocationDC:
         if man.is_allocated:
             return False
         for i in range(len(self.slots)):
-            if self.slots[i] is None:
-                self.slots[i] = man
+            if self.slots[i].man is None:
+                self.slots[i].man = man
                 return True
         return False
 
-    def harvest(self):
+    def journeys(self):
+        return None
+
+    def evening(self):
         return None
 
     def night(self):

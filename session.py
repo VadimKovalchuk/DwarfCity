@@ -44,29 +44,21 @@ class SessionDC:
                 return player
         return None
 
-    def _get_location(self,location_name,player_id):
+    def _get_location(self,player_id,x,y,private):
         '''
         (str,int) -> Location
 
         Returns Location instance that corresponds to location name.
-        Location is looked for in Session map list. If not found than in
-        Player infra locations. Pleayer is defined by passed player ID.
+        Location is looked for in Session map matrix. If not found - than on
+        Player map. Player is distinguished by passed player ID.
         '''
-        for location in self.map:
-            if location.name == location_name:
-                return location
-        player = self._get_player(player_id)
-
-        if not player:
-            return False
-
-        for location in player.infra:
-            if location.name == location_name:
-                return location
-        # for location in player.farm:
-        #     if location.name == location_name:
-        #         return location
-        return False
+        if private == 1:
+            player = self._get_player(player_id)
+            _map = player.map
+        else:
+            _map = self.map
+        location = _map.locations[x][y]
+        return location
 
     def _next_player_turn(self):
         '''
@@ -95,47 +87,43 @@ class SessionDC:
         return True
 
 
-    def allocation(self, player_id, location_name, men):
+    def allocation(self, player_id, x, y, private, man):
         '''
         (int, str, list of str) -> Bool
 
 
         '''
-        location = self._get_location(location_name, player_id)
+        #print("allocation input:"+str(player_id) +", x:"+str(x)+", y:"+str(y)+", z:"+str(private) + str(man))
+        location = self._get_location(player_id,x,y,private)
         if not location:
             return False
 
         # Allocation within other players turn is allowed only
         # to internal locations
-        if location.type == 'standard' and \
+        if location.type == 'public' and \
            player_id != self.player_turn.id:
             return False
 
         # Input validation to Game Logic Rules
-        if location.free_slots_amount() < len(men):
-            return False
-        if location.full_fill is True and \
-            location.free_slots_amount() != len(men):
-            return False
-
+        #if location.free_slots_amount() < 1:
+        #    return False
         # Allocating men to passed location
         player = self._get_player(player_id)
-        for name in men:
-            man = player.get_man_by_name(name)
-            if not man:
-                return False
-            if location.allocate_man(man):
-                man.is_allocated = True
-            else:
-                return False
+        man_class = player.get_man_by_name(man)
+        if not man_class:
+            return False
+        if location.allocation(man_class):
+            man_class.is_allocated = True
+        else:
+            return False
 
         # Switch turn to next player in case if current move where belong
         # passed player.
         if player_id == self.player_turn.id:
             self._next_player_turn()
         logging.debug('Session [' + str(self.id) + ']: Player [' +
-                      str(player_id) + '] allocates ' + str(men) +
-                      ' to location [' + location_name + ']')
+                      str(player_id) + '] allocates ' + str(man) +
+                      ' to location ['+str(x)+']['+ str(y)+'], private:' + str(private))
         return True
 
     def update(self):

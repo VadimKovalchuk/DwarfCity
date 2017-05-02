@@ -100,12 +100,12 @@ class Gate:
         else:
             return False
 
-    def allocation_command(self,location, men):
+    def allocation_command(self,x,y,private, man):
         player_id = int(self.request["id"])
         curent_session = self.core.get_instance_by_player(player_id)
         if 'Session' not in str(type(curent_session)):
             return False
-        return curent_session.allocation(player_id, location, men)
+        return curent_session.allocation(player_id, x, y, private, man)
 
 
     @Request.application
@@ -131,7 +131,7 @@ class Gate:
             print(request.data,'\n',response.data)
             logging.error('_______________________________________________' +
                           '\nRequiest is faulty or its handling was not successfull:\n'+
-                          request.data + '\nResponce:\n' + response.data +
+                          str(request.data) + '\nResponce:\n' + str(response.data) +
                           '\n---------------------------------------------')
         if response.data['id'] == 1000:
             print(request.data,'\n',response.data)

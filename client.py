@@ -1,4 +1,4 @@
-import requests, json , man
+import requests, json, man
 
 url = "http://localhost:4000/jsonrpc"
 headers = {'content-type': 'application/json'}

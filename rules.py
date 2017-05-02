@@ -6,11 +6,13 @@ class Rules:
         '''
         (Sesssion) -> None
 
-        Initial class creation.
+        All game logic is processed at this class.
         '''
         self.session = session
 
         return None
+
+
 
     def process_day_phase(self):
         '''
