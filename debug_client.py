@@ -51,12 +51,13 @@ def login_flow():
 def allocation(men_list,id):
 
     #responce = client.send_request('status',[],player.id)
+    data = {}
     print('location X: ',end='')
-    location_x = int(input())
+    data['dest_x'] = int(input())
     print('location Y: ',end='')
-    location_y = int(input())
-    print('private = 1, public=0: ',end='')
-    private = int(input())
+    data['dest_y'] = int(input())
+    print('dest_layer(private = 1, public=0): ',end='')
+    data['dest_layer'] = int(input())
     for i in range(len(men_list)):
         if men_list[i]["is_allocated"]:
             continue
@@ -64,10 +65,8 @@ def allocation(men_list,id):
     print('name number to add: ',end='')
     inp = input()
     man = men_list[int(inp)]
-    #man.is_allocated = True
-
-    args = {'x': location_x, 'y': location_y, 'private': private, 'man': man["name"]}
-    return client.send_request('allocation',args,id)
+    data['man'] = man["name"]
+    return client.send_request('allocation', {'data': data},id)
 
 def main():
 

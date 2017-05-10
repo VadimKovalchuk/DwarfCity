@@ -87,43 +87,45 @@ class SessionDC:
         return True
 
 
-    def allocation(self, player_id, x, y, private, man):
+    def allocation(self, player_id, data):
         '''
         (int, str, list of str) -> Bool
 
 
         '''
-        #print("allocation input:"+str(player_id) +", x:"+str(x)+", y:"+str(y)+", z:"+str(private) + str(man))
-        location = self._get_location(player_id,x,y,private)
-        if not location:
-            return False
-
+        #Validating mandatory parameters
+        logging.debug('Allocation command is received from player ['+str(player_id)+']')
+        for key in ['dest_x','dest_y','dest_layer','man']:
+            if key in data.keys():
+                logging.debug('Parameter [' + key + '] is found')
+            else:
+                logging.error('Parameter [' + key + '] is MISSING')
+                return False
         # Allocation within other players turn is allowed only
         # to internal locations
+        location = self._get_location(player_id,data['dest_x'],data['dest_y'],data['dest_layer'])
+        if not location:
+            return False
         if location.type == 'public' and \
            player_id != self.player_turn.id:
             return False
-
         # Input validation to Game Logic Rules
-        #if location.free_slots_amount() < 1:
-        #    return False
+
+
         # Allocating men to passed location
         player = self._get_player(player_id)
-        man_class = player.get_man_by_name(man)
+        man_class = player.get_man_by_name(data['man'])
         if not man_class:
             return False
         if location.allocation(man_class):
             man_class.is_allocated = True
         else:
             return False
-
         # Switch turn to next player in case if current move where belong
         # passed player.
         if player_id == self.player_turn.id:
             self._next_player_turn()
-        logging.debug('Session [' + str(self.id) + ']: Player [' +
-                      str(player_id) + '] allocates ' + str(man) +
-                      ' to location ['+str(x)+']['+ str(y)+'], private:' + str(private))
+        logging.debug('Allocation flow is successfully finished')
         return True
 
     def update(self):

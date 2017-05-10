@@ -9,6 +9,7 @@ class Man:
         self.name = name
         self.is_allocated = False
         self.points = 5
+        self.skills = {}
         self.weapon = None
         self.wear = None
         self.inventory = [None, None, None]

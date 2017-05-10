@@ -100,12 +100,12 @@ class Gate:
         else:
             return False
 
-    def allocation_command(self,x,y,private, man):
+    def allocation_command(self,data):
         player_id = int(self.request["id"])
         curent_session = self.core.get_instance_by_player(player_id)
         if 'Session' not in str(type(curent_session)):
             return False
-        return curent_session.allocation(player_id, x, y, private, man)
+        return curent_session.allocation(player_id, data)
 
 
     @Request.application
